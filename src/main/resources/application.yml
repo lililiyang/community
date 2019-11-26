@@ -1,0 +1,5 @@
+github:
+  client:
+    id: babac79062f199612a48
+    secret: d733c4820ab0308261a866efd0bf3e6ac4dce472
+  redirect_url: http://localhost:8080/account/github/callback
