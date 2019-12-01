@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -39,8 +40,8 @@ public class GitHubLoginController {
     @GetMapping("/login")
     public void githubLogin(HttpServletResponse response) throws IOException {
         String githubState = "adgasgdsdhgi";
-        response.sendRedirect("https://github.com/login/oauth/authorize?client_id="+client_id +
-                "&redirect_uri="+redirect_url+"&state="+ githubState);
+        response.sendRedirect("https://github.com/login/oauth/authorize?client_id=" + client_id +
+                "&redirect_uri=" + redirect_url + "&state=" + githubState);
 
         /**
          * Spring MVC项目中页面重定向一般使用return "redirect:/other/controller/";即可。
@@ -49,14 +50,14 @@ public class GitHubLoginController {
          *
          * 将一个HttpServletResponse参数添加到处理程序方法然后调用 response.sendRedirect("some-url");
          */
-       // return "redirect:https://github.com/login/oauth/authorize?client_id=babac79062f199612a48" +
-      //  "&redirect_uri=http://localhost:8080/account/github/callback&state="+ githubState);
+        // return "redirect:https://github.com/login/oauth/authorize?client_id=babac79062f199612a48" +
+        //  "&redirect_uri=http://localhost:8080/account/github/callback&state="+ githubState);
     }
 
     @GetMapping("/callback")
-    @ResponseBody
-    public void githubCallback(@RequestParam(name="code",required = false)String code,
-                               @RequestParam(name="state",required = false)String state) {
+    public String githubCallback(@RequestParam(name = "code", required = false) String code,
+                                 @RequestParam(name = "state", required = false) String state,
+                                 HttpServletRequest request) {
 
         System.out.println("==>state:" + state);
         System.out.println("==>code:" + code);
@@ -67,10 +68,14 @@ public class GitHubLoginController {
         accessTokenDTO.setState(state);
         accessTokenDTO.setRedirect_url(redirect_url);
         String accessToken = gitHubProvider.getAccessToken(accessTokenDTO);
-        System.out.println("access_token ===== "+accessToken);
+        System.out.println("access_token ===== " + accessToken);
         GitHubUser gitHubUser = gitHubProvider.getUser(accessToken);
-        System.out.println(gitHubUser.getName());
-
+        if (gitHubUser != null) {
+            request.getSession().setAttribute("user", gitHubUser);
+            return "redirect:/";
+        } else {
+            return "redirect:/";
+        }
     }
 
 }
