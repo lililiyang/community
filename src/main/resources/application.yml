@@ -1,8 +1,15 @@
 github:
   client:
-    id: ************************
-    secret: *************************
+    id: babac79062f199612a48
+    secret: 2812eee112700af097f48f1b92bb7d2cb8bd3b03
   redirect_url: http://localhost:8887/account/github/callback
 
 server:
   port: 8887
+
+spring:
+  datasource:
+    url: jdbc:h2:~/.h2/community
+    data-username: sa
+    data-password:
+    driver-class-name: org.h2.Driver
