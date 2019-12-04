@@ -75,7 +75,7 @@ public class GitHubLoginController {
         String accessToken = gitHubProvider.getAccessToken(accessTokenDTO);
         System.out.println("access_token ===== " + accessToken);
         GitHubUser gitHubUser = gitHubProvider.getUser(accessToken);
-        if (gitHubUser != null) {
+        if (gitHubUser != null && gitHubUser.getId() != null) {
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);
@@ -83,6 +83,7 @@ public class GitHubLoginController {
             user.setAccountId(String.valueOf(gitHubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(gitHubUser.getAvatar_url());
             userMapper.insertUser(user);
             Cookie cookie = new Cookie("token",token);
             cookie.setPath("/");
