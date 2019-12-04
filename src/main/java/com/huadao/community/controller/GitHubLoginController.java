@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
@@ -44,7 +44,7 @@ public class GitHubLoginController {
     @GetMapping("/login")
     public void githubLogin(HttpServletResponse response) throws IOException {
         String githubState = "adgasgdsdhgi";
-        response.sendRedirect("https:/ github.com/login/oauth/authorize?client_id=" + client_id +
+        response.sendRedirect("https://github.com/login/oauth/authorize?client_id=" + client_id +
                 "&redirect_uri=" + redirect_url + "&state=" + githubState);
 
         /**
@@ -61,7 +61,8 @@ public class GitHubLoginController {
     @GetMapping("/callback")
     public String githubCallback(@RequestParam(name = "code", required = false) String code,
                                  @RequestParam(name = "state", required = false) String state,
-                                 HttpServletRequest request) {
+                                 HttpServletResponse response
+                                 ) {
 
         System.out.println("==>state:" + state);
         System.out.println("==>code:" + code);
@@ -75,14 +76,17 @@ public class GitHubLoginController {
         System.out.println("access_token ===== " + accessToken);
         GitHubUser gitHubUser = gitHubProvider.getUser(accessToken);
         if (gitHubUser != null) {
-            request.getSession().setAttribute("user", gitHubUser);
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setName(gitHubUser.getName());
             user.setAccountId(String.valueOf(gitHubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insertUser(user);
+            Cookie cookie = new Cookie("token",token);
+            cookie.setPath("/");
+            response.addCookie(cookie);
         }
         return "redirect:/";
     }
