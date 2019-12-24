@@ -23,8 +23,8 @@ import java.util.UUID;
  * @date 2019/11/21 22:38
  */
 @Controller
-@RequestMapping("/account/github")
-public class GitHubLoginController {
+@RequestMapping("/account")
+public class AuthorizeController {
 
     @Autowired
     private GitHubProvider gitHubProvider;
@@ -41,7 +41,7 @@ public class GitHubLoginController {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/login")
+    @GetMapping("/github/login")
     public void githubLogin(HttpServletResponse response) throws IOException {
         String githubState = "adgasgdsdhgi";
         response.sendRedirect("https://github.com/login/oauth/authorize?client_id=" + client_id +
@@ -58,7 +58,7 @@ public class GitHubLoginController {
         //  "&redirect_uri=http://localhost:8080/account/github/callback&state="+ githubState);
     }
 
-    @GetMapping("/callback")
+    @GetMapping("/github/callback")
     public String githubCallback(@RequestParam(name = "code", required = false) String code,
                                  @RequestParam(name = "state", required = false) String state,
                                  HttpServletResponse response
