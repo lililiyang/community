@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
  * @date 2019/12/4
  */
 @Mapper
-@Component
 public interface QuestionMapper {
 
     @Insert("insert into question(title,description,gmt_create,gmt_modified,creator,tag) values (#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})")
@@ -31,4 +29,7 @@ public interface QuestionMapper {
 
     @Select("select * from question where creator = #{userId} limit #{offset},#{size}")
     List<Question> questionListByUserId(@Param(value = "userId") Integer userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
+
+    @Select("select * from question where id = #{id}")
+    Question getById(Integer id);
 }

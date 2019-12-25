@@ -19,7 +19,6 @@ import java.util.UUID;
 
 /**
  * @author liyang
- * @version 1.0
  * @date 2019/11/21 22:38
  */
 @Controller
