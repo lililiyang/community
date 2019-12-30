@@ -7,3 +7,7 @@
 [bootstrap文档](https://v3.bootcss.com/getting-started/#download)
 [Github OAuth](https://developer.github.com/apps/building-oauth-apps/)  
 [okhttp](https://square.github.io/okhttp/)
+
+``bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+``

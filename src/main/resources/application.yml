@@ -1,7 +1,7 @@
 github:
   client:
-    id: babac79062f199612a48
-    secret: 2812eee112700af097f48f1b92bb7d2cb8bd3b03
+    id: **********
+    secret: *************
   redirect_url: http://localhost:8887/account/github/callback
 
 server:
@@ -13,3 +13,8 @@ spring:
     data-username: sa
     data-password:
     driver-class-name: org.h2.Driver
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.huadao.community.model.*
+  mapper-locations: classpath:mapper/*.xml
