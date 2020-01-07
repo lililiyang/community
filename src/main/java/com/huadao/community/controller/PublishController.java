@@ -1,6 +1,6 @@
 package com.huadao.community.controller;
 
-import com.huadao.community.mapper.QuestionMapper;
+import com.huadao.community.DTO.QuestionDTO;
 import com.huadao.community.model.Question;
 import com.huadao.community.model.User;
 import com.huadao.community.service.QuestionService;
@@ -16,9 +16,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class PublishController {
-
-    @Autowired
-    private QuestionMapper questionMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -37,15 +34,15 @@ public class PublishController {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
-        if(title == null || title == ""){
+        if (title == null || title == "") {
             model.addAttribute("error", "标题不能为空");
             return "publish";
         }
-        if(description == null || description == ""){
+        if (description == null || description == "") {
             model.addAttribute("error", "问题补充不能为空");
             return "publish";
         }
-        if(tag == null || tag == ""){
+        if (tag == null || tag == "") {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
@@ -71,8 +68,8 @@ public class PublishController {
 
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable Integer id,Model model){
-        Question question = questionMapper.selectByPrimaryKey(id);
+    public String edit(@PathVariable Integer id, Model model) {
+        QuestionDTO question = questionService.getById(id);
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());

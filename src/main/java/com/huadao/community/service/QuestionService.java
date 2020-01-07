@@ -4,6 +4,7 @@ import com.huadao.community.DTO.PaginationDTO;
 import com.huadao.community.DTO.QuestionDTO;
 import com.huadao.community.exception.QuestionErrorCode;
 import com.huadao.community.exception.CustomizeException;
+import com.huadao.community.mapper.QuestionExtMapper;
 import com.huadao.community.mapper.QuestionMapper;
 import com.huadao.community.mapper.UserMapper;
 import com.huadao.community.model.Question;
@@ -26,6 +27,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -140,10 +144,17 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria().andIdEqualTo(question.getId());
             int updated = questionMapper.updateByExampleSelective(question, example);
-            if(updated != 1)  {
+            if (updated != 1) {
                 throw new CustomizeException(QuestionErrorCode.QUESTION_NOT_FOUND);
             }
         }
 
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setViewCount(1);
+        question.setId(id);
+        questionExtMapper.incView(question);
     }
 }
