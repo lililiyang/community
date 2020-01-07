@@ -2,6 +2,8 @@ package com.huadao.community.service;
 
 import com.huadao.community.DTO.PaginationDTO;
 import com.huadao.community.DTO.QuestionDTO;
+import com.huadao.community.exception.QuestionErrorCode;
+import com.huadao.community.exception.CustomizeException;
 import com.huadao.community.mapper.QuestionMapper;
 import com.huadao.community.mapper.UserMapper;
 import com.huadao.community.model.Question;
@@ -30,7 +32,7 @@ public class QuestionService {
 
     public PaginationDTO questionList(Integer page, Integer size) {
         Integer totalPage;
-        Integer totalCount = (int)questionMapper.countByExample(new QuestionExample());
+        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -63,7 +65,7 @@ public class QuestionService {
         }
         paginationDTO.setQuestions(questionDTOList);
 
-        paginationDTO.setPagination(totalPage,page);
+        paginationDTO.setPagination(totalPage, page);
 
         return paginationDTO;
     }
@@ -72,7 +74,7 @@ public class QuestionService {
         Integer totalPage;
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
-        Integer totalCount = (int)questionMapper.countByExample(questionExample);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -107,15 +109,18 @@ public class QuestionService {
         }
         paginationDTO.setQuestions(questionDTOList);
 
-        paginationDTO.setPagination(totalPage,page);
+        paginationDTO.setPagination(totalPage, page);
 
         return paginationDTO;
     }
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(QuestionErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
-        BeanUtils.copyProperties(question,questionDTO);
+        BeanUtils.copyProperties(question, questionDTO);
 
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
@@ -123,18 +128,21 @@ public class QuestionService {
     }
 
     public void createOrUpate(Question question) {
-        if(question.getId() == null){
+        if (question.getId() == null) {
             //创建
             question.setCommentCount(0);
             question.setLikeCount(0);
             question.setViewCount(0);
             questionMapper.insert(question);
-        }else{
+        } else {
             //更新
             question.setGmtModified(System.currentTimeMillis());
             QuestionExample example = new QuestionExample();
             example.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(question, example);
+            int updated = questionMapper.updateByExampleSelective(question, example);
+            if(updated != 1)  {
+                throw new CustomizeException(QuestionErrorCode.QUESTION_NOT_FOUND);
+            }
         }
 
     }
