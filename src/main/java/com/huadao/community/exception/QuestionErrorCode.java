@@ -7,10 +7,15 @@ package com.huadao.community.exception;
 public enum QuestionErrorCode implements CustomeizeErrorCode {
 
 
-    QUESTION_NOT_FOUND(201, "你找到问题不在了，要不要换个试试？");
+    QUESTION_NOT_FOUND(2001, "你找到问题不在了，要不要换个试试？"),
+    TARGET_PARAM_NOT_FOUND(2002,"未选中任何问题或者评论进行回复"),
+    USER_NOT_LOGIN(2003,"当前操作需要登录,请先登录后重试!"),
+    SYS_ERROR(2004,"服务器冒烟了,要不稍等一下再来试试!!!"),
+    TYPE_PARAM_WORNG(2005,"评论类型错误货不存在"),
+    ;
 
-    private String message;
     private Integer code;
+    private String message;
 
     QuestionErrorCode(Integer code, String message) {
         this.code = code;
@@ -19,11 +24,11 @@ public enum QuestionErrorCode implements CustomeizeErrorCode {
 
     @Override
     public String getMessage() {
-        return null;
+        return message;
     }
 
     @Override
     public Integer getCode() {
-        return null;
+        return code;
     }
 }

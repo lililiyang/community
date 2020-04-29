@@ -8,6 +8,7 @@
 [Github OAuth](https://developer.github.com/apps/building-oauth-apps/)  
 [okhttp](https://square.github.io/okhttp/)
 
+mybatis快速生成命令  
 ``bash
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ``

@@ -61,7 +61,7 @@ public class QuestionService {
                 QuestionDTO questionDTO = new QuestionDTO();
                 BeanUtils.copyProperties(question, questionDTO);
 
-                Integer creator = question.getCreator();
+                Long creator = question.getCreator();
                 User user = userMapper.selectByPrimaryKey(creator);
                 questionDTO.setUser(user);
                 questionDTOList.add(questionDTO);
@@ -74,7 +74,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO MyQuestionList(Integer userId, Integer page, Integer size) {
+    public PaginationDTO MyQuestionList(Long userId, Integer page, Integer size) {
         Integer totalPage;
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
@@ -105,7 +105,7 @@ public class QuestionService {
                 QuestionDTO questionDTO = new QuestionDTO();
                 BeanUtils.copyProperties(question, questionDTO);
 
-                Integer creator = question.getCreator();
+                Long creator = question.getCreator();
                 User user = userMapper.selectByPrimaryKey(creator);
                 questionDTO.setUser(user);
                 questionDTOList.add(questionDTO);
@@ -118,7 +118,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
             throw new CustomizeException(QuestionErrorCode.QUESTION_NOT_FOUND);
@@ -137,7 +137,8 @@ public class QuestionService {
             question.setCommentCount(0);
             question.setLikeCount(0);
             question.setViewCount(0);
-            questionMapper.insert(question);
+            question.setCommentCount(0);
+            questionMapper.insert(question) ;
         } else {
             //更新
             question.setGmtModified(System.currentTimeMillis());
@@ -151,7 +152,7 @@ public class QuestionService {
 
     }
 
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question question = new Question();
         question.setViewCount(1);
         question.setId(id);
